@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------------------*/
+   /*----------------------------------------------------------------------------*/
 /* Copyright (c) FIRST 2008. All Rights Reserved.                             */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
@@ -32,14 +32,15 @@ public class RobotTemplate extends SimpleRobot
      
     public void robotInit()
     {
-        frontLeft = new Talon(1);
-        frontRight = new Talon(2);
-        rearLeft = new Talon(3);
-        rearRight = new Talon(4);
-        chassis = new RobotDrive(frontLeft, frontRight, rearLeft, rearRight);
+        frontRight = new Talon(1);
+        rearRight = new Talon(2);
+        frontLeft = new Talon(3);
+        rearLeft = new Talon(4);
+        //(SpeedController frontLeftMotor, SpeedController rearLeftMotor, SpeedController frontRightMotor, SpeedController rearRightMotor)
+        chassis = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         extreme3D = new Joystick(1);
-        chassis.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
-       // chassis.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
+        chassis.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
+        //chassis.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
         chassis.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
         //RobotDrive robotDrive41; 
         //RobotDrive chassis = new RobotDrive(1, 2, 3, 4);
@@ -93,6 +94,10 @@ public class RobotTemplate extends SimpleRobot
             //magnitude, direction, rotation
             Timer.delay(0.01);
             chassis.mecanumDrive_Polar( m, d, z);
+            //frontLeft.set(.5);
+            //frontRight.set(.5);
+            //rearLeft.set(.5);
+            //rearRight.set(.5);
         }
     }
     /**
