@@ -5,6 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 package edu.wpi.first.wpilibj.templates;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.SimpleRobot;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.lang.Object;
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import java.util.Vector;
 /**
@@ -29,6 +31,7 @@ public class RobotTemplate extends SimpleRobot
     RobotDrive chassis;
     Talon frontLeft, frontRight, rearLeft, rearRight;
     Joystick extreme3D;
+    JoystickButton button3;
      
     public void robotInit()
     {
@@ -40,10 +43,10 @@ public class RobotTemplate extends SimpleRobot
         chassis = new RobotDrive(frontLeft, rearLeft, frontRight, rearRight);
         extreme3D = new Joystick(1);
         chassis.setInvertedMotor(RobotDrive.MotorType.kRearRight, true);
-        //chassis.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
         chassis.setInvertedMotor(RobotDrive.MotorType.kFrontRight, true);
-        //RobotDrive robotDrive41; 
-        //RobotDrive chassis = new RobotDrive(1, 2, 3, 4);
+        
+        button3 = new JoystickButton(extreme3D, 3);
+        
     }
     /**
      * This function is called once each time the robot enters autonomous mode.
@@ -80,24 +83,35 @@ public class RobotTemplate extends SimpleRobot
     public void operatorControl() 
     {
         chassis.setSafetyEnabled(true);
-        //chassis.setInvertedMotor(RobotDrive.MotorType.kRearLeft, true);
-        //chassis.setInvertedMotor(RobotDrive.MotorType.kFrontLeft, true);
+        
         while(isOperatorControl() && isEnabled())
-        {   // z = rotation, m = magnitude, d = direction
+        {   
+            // z = rotation, m = magnitude, d = direction
             
             double x = extreme3D.getAxis(Joystick.AxisType.kX);
             double y = extreme3D.getAxis(Joystick.AxisType.kY);
             double z = extreme3D.getTwist();
             double m = extreme3D.getMagnitude(); 
             double d = extreme3D.getDirectionDegrees();
-            //chassis.tankDrive(leftStick, rightStick);
+            
+            
+             if (m < 1)
+                 chassis.mecanumDrive_Polar(0, d, z);
+    
             //magnitude, direction, rotation
             Timer.delay(0.01);
             chassis.mecanumDrive_Polar( m, d, z);
+            
+           
             //frontLeft.set(.5);
             //frontRight.set(.5);
             //rearLeft.set(.5);
             //rearRight.set(.5);
+            
+            //Button Configuration
+            button3.whenPressed(new ButtonRotate());
+            
+            
         }
     }
     /**
@@ -106,5 +120,34 @@ public class RobotTemplate extends SimpleRobot
     public void test() 
     {
        
+    }
+    
+    
+    public class ButtonRotate extends Command
+    {
+        private boolean finished;
+
+        protected void initialize() 
+        {
+            finished = false;
+        }
+
+        protected void execute() 
+        {
+             chassis.arcadeDrive(0, 90);
+             //finished = true;
+        }
+
+        protected boolean isFinished() {
+            return finished;
+        }
+
+        protected void end() {
+        }
+
+        protected void interrupted() {
+            end();
+        }
+        
     }
 }
